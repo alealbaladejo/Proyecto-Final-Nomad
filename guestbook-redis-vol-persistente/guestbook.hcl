@@ -5,7 +5,7 @@ job "guestbook" {
     network {
       port "http" {
         to = 5000
-        static = 8080
+        static = 8083
       }
       port "redis" {
         static = 6379
@@ -53,6 +53,7 @@ job "guestbook" {
       }
 
       service {
+        provider = "nomad"
         name = "guestbook"
         port = "http"
       }
