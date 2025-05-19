@@ -7,7 +7,7 @@ job "apache" {
 
     network {
       port "http" {
-        static = 8086
+        static = 8085
         to = 80
       }
     }
