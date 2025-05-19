@@ -262,6 +262,15 @@ También podemos comprobarlo desde el navegador web, accediendo a la misma direc
 ![Despliegue](./img/nav-nginx.png)
 
 
+Por último podemos comprobar que se ha creado un contenedor docker:
+
+~~~
+docker ps
+CONTAINER ID   IMAGE          COMMAND                  CREATED          STATUS          PORTS                                                    NAMES
+2f39465254cc   nginx:latest   "/docker-entrypoint.…"   41 seconds ago   Up 40 seconds   192.168.1.136:8086->80/tcp, 192.168.1.136:8086->80/udp   nginx-ed07c964-174f-cb75-814f-13246f96dadc
+
+~~~
+
 ## Fin
 
 Con esto has realizado los pasos necesarios para desplegar un servidor Nginx, en Docker con Nomad Hashicorp.
