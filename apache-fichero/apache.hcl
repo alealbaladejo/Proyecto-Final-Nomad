@@ -5,6 +5,12 @@ job "apache" {
   group "apache" {
     count = 1
 
+    volume "webapache" {
+      type = "host"
+      read_only = "false"
+      source = "webapache"
+    }
+
     network {
       port "http" {
         static = 8085
@@ -18,12 +24,14 @@ job "apache" {
       config {
         image = "httpd:2.4"
         ports = ["http"]
-
-        volumes = [
-          "/home/ale/proyecto/pruebas/apache-fichero/web:/usr/local/apache2/htdocs"
-        ]
       }
 
+      volume_mount {
+        volume = "webapache"
+        destination = "/usr/local/apache2/htdocs"
+        read_only = false
+      }
+      
       resources {
         cpu    = 500
         memory = 256
