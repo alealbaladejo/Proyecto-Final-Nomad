@@ -5,7 +5,7 @@ job "guestbook" {
     network {
       port "http" {
         to = 5000
-        static = 8083
+        static = 8087
       }
       port "redis" {
         static = 6379
