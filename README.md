@@ -15,6 +15,9 @@ A continuación proporciono los enlaces directos a las carpetas de cada desplieg
 - [mariadb-variables](./mariadb-variables)
 : Despliegue de **MariaDB** con paso de variables de entorno sensibles y configuración personalizada.
 
+- [guestbook-redis-1](./guestbook-redis-vol-persistente)
+: Despliegue de la aplicación **guestbook** usando una base de datos **redis**
+
 ## Requisitos para poder realizar este tutorial
 - Nomad
 - Docker
