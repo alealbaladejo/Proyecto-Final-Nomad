@@ -18,7 +18,11 @@ A continuación proporciono los enlaces directos a las carpetas de cada desplieg
 - [guestbook-redis-1](./guestbook-redis-vol-persistente)
 : Despliegue de la aplicación **guestbook** usando una base de datos **redis**
 
+- [guestbook-redis-2](./guestbook-redis-jobs-separados/)
+: Despliegue de la aplicación **guestbook** usando una base de datos **redis** en dos ficheros distintos, usando Consul.
+
 ## Requisitos para poder realizar este tutorial
 - Nomad
 - Docker
+- Consul
 
