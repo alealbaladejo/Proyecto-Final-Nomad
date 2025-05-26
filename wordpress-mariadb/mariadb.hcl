@@ -59,4 +59,3 @@ EOF
 }
 
 
-#nomad var put --force nomad/jobs   MYSQL_ROOT_PASSWORD="root_password"   MYSQL_DATABASE="database"   MYSQL_USER="usuario"   MYSQL_PASSWORD="my_password"
