@@ -1,62 +1,56 @@
 job "mariadb" {
   datacenters = ["dc1"]
+  type        = "service"
 
   group "db" {
+    count = 1
+
     network {
       port "db" {
-        static = 3306
+        to = 3306
+	static = 3306
       }
-    }
-
-    volume "db-wp" {
-      type      = "host"
-      read_only = false
-      source    = "mariadb_volume"
     }
 
     task "mariadb" {
       driver = "docker"
 
       config {
-        image = "mariadb:10.11"
+        image = "mariadb:latest"
         ports = ["db"]
       }
 
-      volume_mount {
-        volume      = "db-wp"
-        destination = "/var/lib/mysql"
-        read_only   = false
-      }
-
       template {
-        data = <<EOF
-MYSQL_ROOT_PASSWORD={{ with nomadVar "nomad/jobs" }}{{ .MYSQL_ROOT_PASSWORD }}{{ end }}
-MYSQL_DATABASE={{ with nomadVar "nomad/jobs" }}{{ .MYSQL_DATABASE }}{{ end }}
-MYSQL_USER={{ with nomadVar "nomad/jobs" }}{{ .MYSQL_USER }}{{ end }}
-MYSQL_PASSWORD={{ with nomadVar "nomad/jobs" }}{{ .MYSQL_PASSWORD }}{{ end }}
-EOF
-        destination = "secrets/env"
+        destination = "${NOMAD_SECRETS_DIR}/db.env"
         env         = true
+        change_mode = "restart"
+
+        data = <<EOT
+MYSQL_ROOT_PASSWORD={{ with nomadVar "nomad/jobs/mariadb/db/mariadb" }}{{ .MYSQL_ROOT_PASSWORD }}{{ end }}
+MYSQL_DATABASE={{ with nomadVar "nomad/jobs/mariadb/db/mariadb" }}{{ .MYSQL_DATABASE }}{{ end }}
+MYSQL_USER={{ with nomadVar "nomad/jobs/mariadb/db/mariadb" }}{{ .MYSQL_USER }}{{ end }}
+MYSQL_PASSWORD={{ with nomadVar "nomad/jobs/mariadb/db/mariadb" }}{{ .MYSQL_PASSWORD }}{{ end }}
+EOT
       }
+#para crear las variables usamos:
+#nomad var put nomad/jobs/mariadb/db/mariadb  \
+# MYSQL_ROOT_PASSWORD=root_password \   
+# MYSQL_DATABASE=database \
+# MYSQL_USER=usuario \
+# MYSQL_PASSWORD=my_password
+
 
       service {
-        name = "mariadb"
-        port = "db"
-        tags = ["db"]
-        check {
-          type     = "tcp"
-          interval = "10s"
-          timeout  = "2s"
-        }
+        provider = "nomad"
+        name     = "mariadb"
+        port     = "db"
+        tags     = ["db", "mariadb"]
       }
 
       resources {
-        cpu    = 300
-        memory = 256
+        cpu    = 500
+        memory = 512
       }
     }
   }
 }
-
-
-#nomad var put --force nomad/jobs   MYSQL_ROOT_PASSWORD="root_password"   MYSQL_DATABASE="database"   MYSQL_USER="usuario"   MYSQL_PASSWORD="my_password"
