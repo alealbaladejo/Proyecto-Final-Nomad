@@ -3,11 +3,11 @@ job "webapp" {
   type = "service"
   
   group "webapp" {
-    count = 1
+    count = 3
 
     network {
       port "http" {
-        to = 80
+        to = -1
       }
     }
 
@@ -16,12 +16,13 @@ job "webapp" {
       min     = 1
       max     = 5
       policy {
-        cooldown = "60s"
+        cooldown = "5s"
         check "avg_sessions" {
           source = "prometheus"
-          query = "avg(nomad_client_allocs_cpu_total_percent{exported_job=\"webapp\", task_group=\"webapp\"})"
+#          query = "avg(nomad_client_allocs_cpu_total_percent{exported_job=\"webapp\", task_group=\"webapp\"})"
+	   query = "max(nomad_client_allocs_cpu_total_percent{exported_job=\"webapp\", task_group=\"webapp\"})"
           strategy "target-value" {
-            target = 60.0
+            target = 30.0
           }
         }
       }
@@ -29,26 +30,25 @@ job "webapp" {
 
     service {
       name     = "webapp"
-      provider = "nomad"
       port     = "http"
-      tags = [
-        "traefik.enable=true",
-        "traefik.http.routers.webapp.entrypoints=web",
-        "traefik.http.routers.webapp.rule=PathPrefix(`/`)"
-      ]
+      check {
+	type = "http"
+	path = "/"
+	interval = "2s"
+	timeout = "2s"
+      }
     }
 
     task "server" {
       driver = "docker"
       
-      config {
-        image = "nginx:latest"
-        ports = ["http"]
+      env {
+	PORT = "${NOMAD_PORT_http}"
+	NODE_IP = "${NOMAD_IP_http}"	
       }
-
-      resources {
-        cpu    = 500
-        memory = 256
+      config {
+        image = "hashicorp/demo-webapp-lb-guide"
+        ports = ["http"]
       }
     }
   }
