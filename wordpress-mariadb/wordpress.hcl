@@ -29,6 +29,7 @@ EOF
       }
 
       service {
+	provider = "nomad"
         name = "wordpress"
         port = "http"
         tags = ["web"]
