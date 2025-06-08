@@ -25,4 +25,5 @@ A continuación proporciono los enlaces directos a las carpetas de cada desplieg
 - Nomad
 - Docker
 - Consul
-
+- Prometheus
+- Nomad-autoscaler
