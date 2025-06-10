@@ -19,13 +19,12 @@ job "webapp" {
         cooldown = "30s"
         check "avg_sessions" {
           source = "prometheus"
-#          query = "avg(nomad_client_allocs_cpu_total_percent{exported_job=\"webapp\", task_group=\"webapp\", task=\"server\"})"
-       	  query = "avg(avg_over_time(nomad_client_allocs_cpu_total_percent{exported_job=\"webapp\", task_group=\"webapp\", task=\"server\"}[30s]))"
-
+#         query = "avg(nomad_client_allocs_cpu_total_percent{exported_job=\"webapp\", task_group=\"webapp\", task=\"server\"})"
+	        query = "avg(avg_over_time(nomad_client_allocs_cpu_total_percent{exported_job=\"webapp\", task_group=\"webapp\", task=\"server\"}[30s]))"
           strategy "target-value" {
             target = 30.0
-	          lookback = "30s"
-	          interval = "10s"
+	            lookback = "10s"
+	            interval = "10s"
           }
         }
       }
